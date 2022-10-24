@@ -22,8 +22,10 @@ class MyListPage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: taskList.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(taskList[index].name),
+                  return Card(
+                    child: ListTile(
+                      title: Text(taskList[index].name),
+                    ),
                   );
                 },
               ),

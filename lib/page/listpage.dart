@@ -63,6 +63,17 @@ class _MyListPageState extends State<MyListPage> {
                         ],
                       ),
                     ),
+                    secondaryBackground: Container(
+                      color: Colors.blue[300],
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.inbox_rounded,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
                     child: Card(
                       child: ListTile(
                         title: Text(

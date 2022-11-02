@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider_listview/models/task.dart';
-import 'package:provider_listview/validation/validation_item.dart';
+
+import '../models/task.dart';
+import '../validation/validation_item.dart';
+import 'database_service.dart';
 
 class Tasklist with ChangeNotifier {
-  final List<Task> _taskList = [];
+  final DatabaseService _databaseService = DatabaseService();
+
+  List<Task> _taskList = [];
+
+  get taskList => _taskList;
+  get taskName => _taskName;
+
   bool _isActive = true;
 
   ValidationItem _taskName = ValidationItem(null, null);
 
-  get taskList => _taskList;
-  get taskName => _taskName;
   get isActive => _isActive;
 
   // validation
@@ -49,13 +55,31 @@ class Tasklist with ChangeNotifier {
         : false;
   }
 
-  void addNewTask(String taskName) {
-    _taskList.add(
-      Task(
-        name: taskName,
-        status: false,
-      ),
+  // void changeTaskName(String taskName) {
+  //   _taskName = taskName;
+  //   notifyListeners();
+  // }
+
+  Future<void> fetchTaskList() async {
+    _taskList = await _databaseService.taskList();
+    notifyListeners();
+  }
+
+  Future<void> addTask() async {
+    await _databaseService.insertTask(
+      Task(name: _taskName.value, status: 0),
     );
+    notifyListeners();
+  }
+
+  Future<void> updateTask(Task task, String newVal) async {
+    await _databaseService.update(task, newVal);
+    await fetchTaskList();
+    notifyListeners();
+  }
+
+  Future<void> deleteTask(Task task) async {
+    await _databaseService.delete(task);
     notifyListeners();
   }
 }

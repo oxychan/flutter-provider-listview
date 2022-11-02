@@ -2,24 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_listview/service/tasklist.dart';
 
-class AddTaskPage extends StatelessWidget {
-  AddTaskPage({super.key});
+import '../models/task.dart';
 
-  final TextEditingController _controller = TextEditingController();
+class EditTaskPage extends StatefulWidget {
+  final Task task;
+  EditTaskPage({super.key, required this.task});
+
+  @override
+  State<EditTaskPage> createState() => _EditTaskPageState();
+}
+
+class _EditTaskPageState extends State<EditTaskPage> {
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _controller.text = widget.task.name!;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tambah Task Baru"),
+        title: const Text("Edit Task"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             TextFormField(
+              // initialValue: task.name,
               decoration: InputDecoration(
-                hintText: "Masukkan Task Baru",
+                hintText: "Edit Task",
                 errorText: context.watch<Tasklist>().taskName.error,
               ),
               controller: _controller,
@@ -41,12 +57,14 @@ class AddTaskPage extends StatelessWidget {
                                 .setTaskName(_controller.text);
 
                             if (context.read<Tasklist>().isValidated()) {
-                              context.read<Tasklist>().addTask();
+                              context
+                                  .read<Tasklist>()
+                                  .updateTask(widget.task, _controller.text);
                               Navigator.pop(context);
                             }
                           }
                         : null,
-                    child: const Text("Tambah Task Baru"),
+                    child: const Text("Edit Task"),
                   ),
                 ),
               ],
